@@ -85,6 +85,7 @@ B = 1516.18
 Now we have a number with many digits, but we will take three digits after the decimal point, which are: 
 **0.686**
 Now, if we find the last number to be 5 or higher, we will increase the points. I mean 5, 6, 7, 8, 9, so we will increase the points like this: 
+
 Before:
 **0.68**
 
