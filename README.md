@@ -67,7 +67,9 @@ Lose: 0
 - **WE: Expected result:**
 To calculate it, we need to do the following: 
 We have an example:
+
 A = 1720.32
+
 B = 1516.18
 
 ```
