@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA World Ranking & Matches</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icons/6.11.0/css/flag-icons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+        body {
+            background: #f5f5f5;
+            padding: 20px;
+            color: #333;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .fifa-container, .matches-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        /* Header */
+        .ranking-header, .matches-header {
+            background: linear-gradient(135deg, #0055a4 0%, #003580 100%);
+            color: white;
+            padding: 25px 30px;
+            border-bottom: 4px solid #ff0000;
+        }
+        .ranking-header h1, .matches-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .ranking-header h2, .matches-header h2 {
+            font-size: 20px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        /* Info Bar */
+        .info-bar {
+            padding: 15px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .update-date {
+            color: #666;
+            font-size: 14px;
+        }
+        /* Table */
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .ranking-table thead {
+            background: #f1f3f5;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .ranking-table th {
+            padding: 18px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #0055a4;
+            border-bottom: 2px solid #dee2e6;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .ranking-table th:first-child { padding-left: 30px; width: 120px; }
+        .ranking-table th:nth-child(2) { width: 400px; }
+        .ranking-table th:nth-child(3) { width: 200px; }
+        .ranking-table tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+        .ranking-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        .ranking-table td {
+            padding: 16px 15px;
+            vertical-align: middle;
+        }
+        .ranking-table td:first-child {
+            padding-left: 30px;
+        }
+        .ranking-table td:last-child {
+            padding-right: 30px;
+        }
+        /* Rank Cell with Icon */
+        .rank-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .rank-number {
+            font-weight: 700;
+            font-size: 18px;
+            color: #0055a4;
+            min-width: 30px;
+        }
+        .rank-change-icon {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #f0f0f0;
+        }
+        .rank-change-up {
+            color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        .rank-change-down {
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        .rank-change-same {
+            color: #666;
+            background-color: rgba(108, 117, 125, 0.1);
+        }
+        /* Team Cell */
+        .team-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .team-flag {
+            width: 40px;
+            height: 27px;
+            border-radius: 2px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            border: 1px solid #ddd;
+            flex-shrink: 0;
+        }
+        .team-flag .fi {
+            width: 100%;
+            height: 100%;
+            border-radius: 2px;
+        }
+        .team-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            line-height: 1.2;
+        }
+        .team-code {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+        /* Points Cell with Change */
+        .points-container {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+        }
+        .points-main {
+            font-weight: 700;
+            font-size: 16px;
+            color: #333;
+        }
+        .points-change {
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-block;
+        }
+        .points-change-positive {
+            color: #28a745;
+        }
+        .points-change-negative {
+            color: #dc3545;
+        }
+        .points-change-neutral {
+            color: #666;
+        }
+        .change-icon-small {
+            font-size: 12px;
+            margin-right: 2px;
+        }
+        /* Footer */
+        .ranking-footer, .matches-footer {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+        .teams-count {
+            font-weight: bold;
+            color: #0055a4;
+        }
+        
+        /* MATCHES SECTION */
+        .matches-date-section {
+            padding: 0 30px;
+            margin-bottom: 30px;
+        }
+        .date-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0055a4;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        .matches-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .match-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #0055a4;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .match-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .team-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 35%;
+        }
+        .team-change {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        .team-change.positive {
+            color: #28a745;
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+        .team-change.negative {
+            color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        .team-flag-large {
+            width: 60px;
+            height: 40px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid #ddd;
+            margin-bottom: 8px;
+        }
+        .team-flag-large .fi {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+        .team-name-large {
+            font-weight: 600;
+            font-size: 16px;
+            color: #333;
+            text-align: center;
+        }
+        .match-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+        }
+        .match-score {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .match-type {
+            font-size: 14px;
+            color: #666;
+            background-color: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .ended-match {
+            font-size: 14px;
+            color: #ffffff;
+            background-color: #e81c1c;
+            padding: 4px 12px;
+            border-radius: 10px;
+        }
+        .started-match {
+            font-size: 14px;
+            color: #ffffff;
+            background-color: #31f50a;
+            padding: 4px 12px;
+            border-radius: 10px;
+        }
+        .soon-match {
+            font-size: 14px;
+            color: #ffffff;
+            background-color: #b6b400;
+            padding: 4px 12px;
+            border-radius: 10px;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .ranking-header, .matches-header { padding: 20px; }
+            .ranking-header h1, .matches-header h1 { font-size: 22px; }
+            .ranking-header h2, .matches-header h2 { font-size: 16px; }
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            .update-date { text-align: center; }
+            .ranking-table th:first-child,
+            .ranking-table td:first-child { padding-left: 15px; }
+            .ranking-table th:nth-child(3),
+            .ranking-table td:nth-child(3) { padding-right: 15px; }
+            .team-cell { gap: 10px; }
+            .team-flag { width: 35px; height: 24px; }
+            .points-container {
+                flex-direction: column;
+                gap: 2px;
+                align-items: flex-start;
+            }
+            .matches-date-section { padding: 0 15px; }
+            .date-title { font-size: 20px; }
+            .match-card {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .team-section, .match-center {
+                width: 100%;
+            }
+            .team-section:first-child {
+                order: 1;
+            }
+            .team-section:last-child {
+                order: 3;
+            }
+            .match-center {
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- FIFA Ranking Section -->
+        <div class="fifa-container">
+            <div class="ranking-header">
+                <h1>FIFA / COCA-COLA WORLD RANKING </h1>
+                <h2 id="ranking-title">POINTS CALCULATION FOR NATIONAL TEAMS AND PREDICTIONS - JANUARY 2026</h2>
+            </div>
+            
+            <div class="info-bar">
+                <div class="update-date" id="updateDateDisplay">
+                    Data Source: FIFA Ranking (Dec 2025) | Flags may vary
+                </div>
+            </div>
+            
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>RK</th>
+                        <th>Team</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody id="ranking-body">
+                    <!-- Ranking data will be loaded here -->
+                </tbody>
+            </table>
+            
+            <div class="ranking-footer">
+                FIFA World Ranking • <span class="teams-count">210</span> national teams ranked • Based on official FIFA system | We use FIFA's method to calculate the national team rankings, and you can also calculate with us by opening a pull request on GitHub and entering the team name, number of points, and other details...
+            </div>
+        </div>
+        
+        <!-- Matches Section -->
+        <div class="matches-container">
+            <div class="matches-header">
+                <h1>Upcoming & Recent Matches</h1>
+                <h2>International Football Fixtures</h2>
+            </div>
+            <div class="matches-date-section">
+                <div class="date-title">25 December 2025</div>
+                    <div class="match-card">
+                      
+                     <div class="ended-match">No Matches In 25 December 2025</div>              
+                        </div>
+                <div class="date-title">24 December 2025</div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change negative">-13.56</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ga"></span>
+                            </div>
+                            <div class="team-name-large">Gabon</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">0 - 1</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Cameroon Victory</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change positive">+13.56</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-cm"></span>
+                            </div>
+                            <div class="team-name-large">Cameroon</div>
+                        </div>
+                        </div>
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+9.26</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ci"></span>
+                            </div>
+                            <div class="team-name-large">Ivory Coast</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">1 - 0</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Ivory Coast Victory</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-9.26</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-mz"></span>
+                            </div>
+                            <div class="team-name-large">Mozambique</div>
+                        </div>
+                        </div>
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change negative">-11.81</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-gq"></span>
+                            </div>
+                            <div class="team-name-large">Equatorial Guinea</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">1 - 2</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Burkina Faso Victory</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change positive">+11.81</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-bf"></span>
+                            </div>
+                            <div class="team-name-large">Burkina Faso</div>
+                        </div>
+                        </div>
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change negative">-6.95</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-sd"></span>
+                            </div>
+                            <div class="team-name-large">Sudan</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">0 - 3</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Algeria Victory</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change positive">+6.95</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-dz"></span>
+                            </div>
+                            <div class="team-name-large">Algeria</div>
+                        </div>
+                    </div>
+                <!-- 19 December 2025 -->
+                <div class="date-title">23 December 2025</div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+10.89</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-tn"></span>
+                            </div>
+                            <div class="team-name-large">Tunisia</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">3 - 1</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Tunisia Victory</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-10.89</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ug"></span>
+                            </div>
+                            <div class="team-name-large">Uganda</div>
+                        </div>
+                    </div>
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+7.89</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ng"></span>
+                            </div>
+                            <div class="team-name-large">Nigeria</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">2 - 1</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Nigeria Victory</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-7.89</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-tz"></span>
+                            </div>
+                            <div class="team-name-large">Tanzania</div>
+                        </div>
+                    </div>
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+3.61</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-sn"></span>
+                            </div>
+                            <div class="team-name-large">Senegal</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">3 - 0</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Senegal Victory</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-3.61</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-bw"></span>
+                            </div>
+                            <div class="team-name-large">Botswana</div>
+                        </div>
+                    </div>
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+11.43</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-cd"></span>
+                            </div>
+                            <div class="team-name-large">DR Congo</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">1 - 0</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with DR Congo Victory</div>
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-11.43</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-bj"></span>
+                            </div>
+                            <div class="team-name-large">Benin</div>
+                        </div>
+                    </div>
+                    
+                <div class="date-title">22 December 2025</div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+6.37</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-eg"></span>
+                            </div>
+                            <div class="team-name-large">Egypt</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">2 - 1</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Egypt Victory</div>
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-6.37</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-zw"></span>
+                            </div>
+                            <div class="team-name-large">Zimbabwe</div>
+                        </div>
+                    </div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change negative">-12.43</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ao"></span>
+                            </div>
+                            <div class="team-name-large">Angola</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">1 - 2</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with South Africa Victory</div>
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change positive">+12.43</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-za"></span>
+                            </div>
+                            <div class="team-name-large">South Africa</div>
+                        </div>
+                    </div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change negative">-6.31</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ml"></span>
+                            </div>
+                            <div class="team-name-large">Mali</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">1 - 1</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Draw</div>
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change positive">+6.31</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-zm"></span>
+                            </div>
+                            <div class="team-name-large">Zambia</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="date-title">21 December 2025</div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+4.05</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ma"></span>
+                            </div>
+                            <div class="team-name-large">Morocco</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">2 - 0</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Morocco Victory</div>
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-4.05</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-km"></span>
+                            </div>
+                            <div class="team-name-large">Comoros</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="matches-footer">
+                International Matches • All times in local timezone • Results and rankings are updated after each match
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // FIFA WORLD RANKING DATA مع بيانات نقاط التغيير المضافة
+        const currentGlobalRanking = [
+            { rank: 1, name: "Spain", code: "ESP", points: 1877.18, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 2, name: "Argentina", code: "ARG", points: 1873.33, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 3, name: "France", code: "FRA", points: 1870, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 4, name: "England", code: "ENG", points: 1834.12, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 5, name: "Brazil", code: "BRA", points: 1760.46, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 6, name: "Portugal", code: "POR", points: 1760.38, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 7, name: "Netherlands", code: "NED", points: 1756.27, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 8, name: "Belgium", code: "BEL", points: 1730.71, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 9, name: "Germany", code: "GER", points: 1724.15, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 10, name: "Morocco", code: "MAR", points: 1720.39, change: "up", changeValue: 1, pointsChange: +4.05 },
+            { rank: 11, name: "Croatia", code: "CRO", points: 1716.88, change: "down", changeValue: 1, pointsChange: 0 },
+            { rank: 12, name: "Italy", code: "ITA", points: 1702.06, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 13, name: "Colombia", code: "COL", points: 1701.3, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 14, name: "United States", code: "USA", points: 1681.88, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 15, name: "Mexico", code: "MEX", points: 1675.75, change: "same", changeValue: 4, pointsChange: 0 },
+            { rank: 16, name: "Uruguay", code: "URY", points: 1672.62, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 17, name: "Switzerland", code: "SUI", points: 1654.69, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 18, name: "Senegal", code: "SEN", points: 1651.68, change: "up", changeValue: 1, pointsChange: +3.61 },
+            { rank: 19, name: "Japan", code: "JPN", points: 1650.12, change: "down", changeValue: 1, pointsChange: 0 },
+            { rank: 20, name: "Iran", code: "IRN", points: 1617.02, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 21, name: "Denmark", code: "DEN", points: 1616.75, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 22, name: "South Korea", code: "KOR", points: 1599.45, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 23, name: "Ecuador", code: "ECU", points: 1591.73, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 24, name: "Austria", code: "AUT", points: 1585.51, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 25, name: "Türkiye", code: "TUR", points: 1582.69, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 26, name: "Australia", code: "AUS", points: 1574.01, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 27, name: "Canada", code: "CAN", points: 1559.15, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 28, name: "Ukraine", code: "UKR", points: 1557.47, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 29, name: "Norway", code: "NOR", points: 1553.14, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 30, name: "Panama", code: "PAN", points: 1540.43, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 31, name: "Poland", code: "POL", points: 1532.04, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 32, name: "Wales", code: "WAL", points: 1529.71, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 33, name: "Algeria", code: "ALG", points: 1524.64, change: "up", changeValue: 1, pointsChange: +6.95 },
+            { rank: 34, name: "Russia", code: "RUS", points: 1524.52, change: "down", changeValue: 3, pointsChange: 0 },
+            { rank: 35, name: "Egypt", code: "EGY", points: 1521.55, change: "down", changeValue: 1, pointsChange: +6.37 },
+            { rank: 36, name: "Nigeria", code: "NGA", points: 1510.36, change: "up", changeValue: 3, pointsChange: +7.9 },
+            { rank: 37, name: "Scotland", code: "SCO", points: 1506.77, change: "down", changeValue: 1, pointsChange: 0 },
+            { rank: 38, name: "Serbia", code: "SRB", points: 1506.34, change: "down", changeValue: 1, pointsChange: 0 },
+            { rank: 39, name: "Tunisia", code: "TUN", points: 1505.76, change: "up", changeValue: 2, pointsChange: +10.89 },
+            { rank: 40, name: "Paraguay", code: "PAR", points: 1501.5, change: "down", changeValue: 1, pointsChange: 0 },
+            { rank: 41, name: "Ivory Coast", code: "CIV", points: 1498.86, change: "up", changeValue: 1, pointsChange: +9.26 },
+            { rank: 42, name: "Hungary", code: "HUN", points: 1496.29, change: "down", changeValue: 4, pointsChange: 0 },
+            { rank: 43, name: "Sweden", code: "SWE", points: 1487.13, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 44, name: "Czech Republic", code: "CZE", points: 1487, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 45, name: "Slovakia", code: "SVK", points: 1485.65, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 46, name: "Greece", code: "GRE", points: 1480.38, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 47, name: "Romania", code: "ROU", points: 1465.78, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 48, name: "Venezuela", code: "VEN", points: 1465.22, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 49, name: "Costa Rica", code: "CRC", points: 1464.24, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 50, name: "Uzbekistan", code: "UZB", points: 1462.03, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 51, name: "Peru", code: "PER", points: 1459.57, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 52, name: "Chile", code: "CHL", points: 1457.84, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 53, name: "DR Congo", code: "COD", points: 1455.59, change: "up", changeValue: 3, pointsChange: +11.43 },
+            { rank: 54, name: "Qatar", code: "QAT", points: 1454.96, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 55, name: "Cameroon", code: "CMR", points: 1454, change: "up", changeValue: 2, pointsChange: +13.56 },
+            { rank: 56, name: "Mali", code: "MLI", points: 1448.72, change: "down", changeValue: 1, pointsChange: -6.31 },
+            { rank: 57, name: "Slovenia", code: "SVN", points: 1447.31, change: "down", changeValue: 2, pointsChange: 0 },
+            { rank: 58, name: "South Africa", code: "RSA", points: 1439.17, change: "up", changeValue: 1, pointsChange: +12.43 },
+            { rank: 59, name: "Iraq", code: "IRQ", points: 1436.94, change: "down", changeValue: 3, pointsChange: 0 },
+            { rank: 60, name: "Ireland", code: "IRL", points: 1436.04, change: "down", changeValue: 1, pointsChange: 0 },
+            { rank: 61, name: "Saudi Arabia", code: "KSA", points: 1429.48, change: "down", changeValue: 1, pointsChange: 0 },
+            { rank: 62, name: "Burkina Faso", code: "BFA", points: 1416.62, change: "same", changeValue: 0, pointsChange: +11.81 },
+            { rank: 63, name: "Albania", code: "ALB", points: 1401.07, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 64, name: "Jordan", code: "JOR", points: 1388.93, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 65, name: "Honduras", code: "HON", points: 1379.54, change: "same", changeValue: 4, pointsChange: 0 },
+            { rank: 66, name: "North Macedonia", code: "MKD", points: 1378.57, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 67, name: "Cape Verde", code: "CPV", points: 1370.49, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 68, name: "United Arab Emarites", code: "UAE", points: 1370.47, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 69, name: "North Ireland", code: "NIR", points: 1366.02, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 70, name: "Jamaica", code: "JAM", points: 1362.46, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 71, name: "Bosnia and Herzegovina", code: "BIH", points: 1362.37, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 72, name: "Ghana", code: "GHA", points: 1351.09, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 73, name: "Georgia", code: "GEO", points: 1347.88, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 74, name: "Iceland", code: "ISL", points: 1344.72, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 75, name: "Finland", code: "FIN", points: 1341.81, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 76, name: "Bolivia", code: "BOL", points: 1329.56, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 77, name: "Israel", code: "ISR", points: 1328.14, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 78, name: "Oman", code: "OMA", points: 1313.46, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 79, name: "Kosovo", code: "KOS", points: 1308.84, change: "up", changeValue: 2, pointsChange: 0 },
+            { rank: 80, name: "Gabon", code: "GAB", points: 1307.68, change: "down", changeValue: 1, pointsChange: -13.56 },
+            { rank: 81, name: "Guinea", code: "GUI", points: 1307.05, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 82, name: "Curaçao", code: "CUW", points: 1302.7, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 83, name: "Montenegro", code: "MNE", points: 1297.09, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 84, name: "Haiti", code: "HAI", points: 1294.49, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 85, name: "Syria", code: "SYR", points: 1282.62, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 86, name: "New Zealand", code: "NZL", points: 1279.25, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 87, name: "Uganda", code: "UGA", points: 1277.11, change: "down", changeValue: 1, pointsChange: -10.89 },
+            { rank: 88, name: "Bulgaria", code: "BUL", points: 1272.19, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 89, name: "Zambia", code: "ZAM", points: 1264.71, change: "up", changeValue: 2, pointsChange: +6.31 },
+            { rank: 90, name: "Angola", code: "ANG", points: 1259.10, change: "down", changeValue: 1, pointsChange: -12.43 },
+            { rank: 91, name: "Bahrain", code: "BHR", points: 1258.53, change: "down", changeValue: 4, pointsChange: 0 },
+            { rank: 92, name: "China", code: "CHN", points: 1249.06, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 93, name: "Guatemala", code: "GTM", points: 1245.77, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 94, name: "Palestine", code: "PLE", points: 1244.73, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 95, name: "Benin", code: "BEN", points: 1255.72, change: "down", changeValue: 3, pointsChange: -11.43 },
+            { rank: 96, name: "Thailand", code: "THA", points: 1243.27, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 97, name: "Trinidad and Tobago", code: "TRI", points: 1227.32, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 98, name: "Belarus", code: "BLR", points: 1227.09, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 99, name: "El Salvador", code: "SLV", points: 1226.65, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 100, name: "Tajikistan", code: "TJK", points: 1224.93, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 101, name: "Luxembourg", code: "LUX", points: 1218.91, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 102, name: "Equatorial Guinea", code: "EQG", points: 1217.28, change: "up", changeValue: 2, pointsChange: -11.81 },
+            { rank: 103, name: "Mozambique", code: "MOZ", points: 1214.21, change: "down", changeValue: 1, pointsChange: 9.26 },
+            { rank: 104, name: "Kyrgyzstan", code: "KGZ", points: 1201.22, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 105, name: "Madagascar", code: "MAD", points: 1198.87, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 106, name: "Armenia", code: "ARM", points: 1196.08, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 107, name: "Vietnam", code: "VIE", points: 1189.51, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 108, name: "Lebanon", code: "LBN", points: 1187.96, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 109, name: "Niger", code: "NIG", points: 1185.09, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 110, name: "Libya", code: "LBY", points: 1183.06, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 111, name: "Comoros", code: "COM", points: 1182.36, change: "down", changeValue: 1, pointsChange: -4.05 },
+            { rank: 112, name: "Kenya", code: "KEN", points: 1179.54, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 113, name: "Tanzania", code: "TAN", points: 1173.32, change: "down", changeValue: 1, pointsChange: -7.89 },
+            { rank: 114, name: "Kazakhstan", code: "KAZ", points: 1173, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 115, name: "Mauritania", code: "MTN", points: 1171.35, change: "same", changeValue: 4, pointsChange: 0 },
+            { rank: 116, name: "Gambia", code: "GAM", points: 1161.65, change: "up", changeValue: 2, pointsChange: 0 },
+            { rank: 117, name: "Namibia", code: "NAM", points: 1153.22, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 118, name: "North Korea", code: "PRK", points: 1151.05, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 119, name: "Sierra Leone", code: "SLE", points: 1149.1, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 120, name: "Sudan", code: "SUD", points: 1147.48, change: "down", changeValue: 4, pointsChange: -6.95 },
+            { rank: 121, name: "Malaysia", code: "MAY", points: 1145.89, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 122, name: "Indonesia", code: "IDN", points: 1144.73, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 123, name: "Suriname", code: "SUR", points: 1140.54, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 124, name: "Togo", code: "TOG", points: 1140.35, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 125, name: "Faroe Islands", code: "FRO", points: 1135.42, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 126, name: "Malawi", code: "MWI", points: 1133.75, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 127, name: "Azerbaijan", code: "AZE", points: 1132.97, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 128, name: "Cyprus", code: "CYP", points: 1128.5, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 129, name: "Estonia", code: "EST", points: 1123.11, change: "up", changeValue: 2, pointsChange: 0 },
+            { rank: 130, name: "Rwanda", code: "RWA", points: 1117.78, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 131, name: "Zimbabwe", code: "ZIM", points: 1117.32, change: "down", changeValue: 2, pointsChange: -6.37 },
+            { rank: 132, name: "Nicaragua", code: "NCA", points: 1116.86, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 133, name: "Guinea Bissau", code: "GNB", points: 1108.09, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 134, name: "Congo", code: "CGO", points: 1105.96, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 135, name: "Kuwait", code: "KUW", points: 1105.1, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 136, name: "Philippines", code: "PHI", points: 1090.95, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 137, name: "Turkmenistan", code: "TKM", points: 1087.52, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 138, name: "Central African Republic", code: "CTA", points: 1083.57, change: "up", changeValue: 1, pointsChange: 0 },
+            { rank: 139, name: "Latvia", code: "LVA", points: 1082.68, change: "up", changeValue: 4, pointsChange: 0 },
+            { rank: 140, name: "Liberia", code: "LBR", points: 1081.46, change: "up", changeValue: 2, pointsChange: 0 },
+            { rank: 141, name: "Botswana", code: "BWA", points: 1080.95, change: "down", changeValue: 3, pointsChange: -3.61 },
+            { rank: 142, name: "India", code: "IND", points: 1079.52, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 143, name: "Dominican Republic", code: "DOM", points: 1077.49, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 144, name: "Lesotho", code: "LES", points: 1065.97, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 145, name: "Burundi", code: "BDI", points: 1060.22, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 146, name: "Lithuania", code: "LTU", points: 1056.34, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 147, name: "Ethiopia", code: "ETH", points: 1055.36, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 148, name: "Singapore", code: "SIN", points: 1050.35, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 149, name: "Yemen", code: "YEM", points: 1049.49, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 150, name: "New Caledonia", code: "NCL", points: 1042.62, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 151, name: "Guyana", code: "GUY", points: 1041.9, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 152, name: "Solomon Islands", code: "SOL", points: 1039.86, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 153, name: "Hong Kong", code: "MLI", points: 1038.14, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 154, name: "Saint Kitts and Nevis", code: "SKN", points: 1035.25, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 155, name: "Fiji", code: "FIJ", points: 1029.7, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 156, name: "Puerto Rico", code: "PUR", points: 1020.07, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 157, name: "Tahiti", code: "TAH", points: 1019.04, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 158, name: "Moldova", code: "MDA", points: 1012.64, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 159, name: "Eswatini", code: "SWZ", points: 1010.52, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 160, name: "Vanuatu", code: "VAN", points: 997.01, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 161, name: "Malta", code: "MLT", points: 996.59, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 162, name: "Afghanistan", code: "AFG", points: 991.19, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 163, name: "Myanmar", code: "MYA", points: 990.81, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 164, name: "Granada", code: "GRN", points: 989.59, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 165, name: "Antigua and Barbuda", code: "ATG", points: 986.58, change: "same", changeValue: 4, pointsChange: 0 },
+            { rank: 166, name: "Cuba", code: "CUB", points: 980.49, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 167, name: "St Lucia", code: "LCA", points: 980.28, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 168, name: "South Sudan", code: "SSD", points: 977.5, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 169, name: "Bermuda", code: "BER", points: 976.87, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 170, name: "Papua New Guniea", code: "PNG", points: 974.9, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 271, name: "St Vincent and the Grenadines", code: "VIN", points: 963.74, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 172, name: "Andorra", code: "AND", points: 949.44, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 173, name: "Maldives", code: "MDV", points: 945.02, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 174, name: "Chinese Taipei", code: "TPE", points: 938.21, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 175, name: "Montserrat", code: "MSR", points: 916.75, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 176, name: "Mauritius", code: "MRI", points: 915.51, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 177, name: "Chad", code: "TCH", points: 914.65, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 178, name: "Barbados", code: "BRB", points: 914.42, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 179, name: "Cambodia", code: "CAM", points: 911.54, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 180, name: "Bangladesh", code: "BAN", points: 911.1, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 181, name: "Belize", code: "BLZ", points: 910.74, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 182, name: "Nepal", code: "NEP", points: 902.52, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 183, name: "Dominican", code: "DOM", points: 901.37, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 184, name: "American Samoa", code: "ASA", points: 883.17, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 185, name: "Mongolia", code: "MGL", points: 879.75, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 186, name: "Cook Islands", code: "COK", points: 877.53, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 187, name: "Samoa", code: "SAM", points: 876.41, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 188, name: "Brunei", code: "BRU", points: 875.78, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 189, name: "São Tomé and Príncipe", code: "STP", points: 871.63, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 190, name: "Laos", code: "LAO", points: 871.16, change: "same", changeValue: 4, pointsChange: 0 },
+            { rank: 191, name: "Aruba", code: "ARU", points: 867.94, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 192, name: "Bhutan", code: "BHU", points: 865.29, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 193, name: "Macau", code: "MAC", points: 857.4, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 194, name: "Sri Lanka", code: "SRI", points: 857.74, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 195, name: "Cayman Islands", code: "CYM", points: 851.74, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 196, name: "Djibouti", code: "DJI", points: 847.03, change: "same", changeValue: 3, pointsChange: 4.33 },
+            { rank: 197, name: "Tonga", code: "TGA", points: 835.64, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 198, name: "Timor-Leste", code: "TRI", points: 835.55, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 199, name: "Pakistan", code: "PAK", points: 833.16, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 200, name: "Somalia", code: "SOM", points: 828.9, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 201, name: "Guam", code: "GUM", points: 823.08, change: "same", changeValue: 4, pointsChange: 0 },
+            { rank: 202, name: "Gibraltar", code: "GIB", points: 818.03, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 203, name: "Seychelles", code: "SEY", points: 805.33, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 204, name: "Turks and Caicos Islands", code: "TCA", points: 803.98, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 205, name: "Liechtenstein", code: "LIE", points: 799.8, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 206, name: "Bahamas", code: "BAH", points: 796.6, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 207, name: "US Virgin Islands", code: "VIR", points: 776.6, change: "same", changeValue: 3, pointsChange: 0 },
+            { rank: 208, name: "British Virgin Islands", code: "VGB", points: 776.54, change: "same", changeValue: 2, pointsChange: 0 },
+            { rank: 209, name: "Anguilla", code: "AIA", points: 759.78, change: "same", changeValue: 0, pointsChange: 0 },
+            { rank: 210, name: "San Marino", code: "SMR", points: 726.03, change: "same", changeValue: 1, pointsChange: 0 },
+        ];
+
+        // FLAG MAPPING
+        function getFlagClass(countryCode) {
+            const flagMap = {
+                // Europe
+                'ALB': 'al', 'AND': 'ad', 'ARM': 'am', 'AUT': 'at', 'AZE': 'az',
+                'BEL': 'be', 'BIH': 'ba', 'BLR': 'by', 'BUL': 'bg', 'CRO': 'hr',
+                'CYP': 'cy', 'CZE': 'cz', 'DEN': 'dk', 'ENG': 'gb-eng', 'ESP': 'es',
+                'EST': 'ee', 'FIN': 'fi', 'FRA': 'fr', 'GEO': 'ge', 'GER': 'de',
+                'GIB': 'gi', 'GRE': 'gr', 'HUN': 'hu', 'ISL': 'is', 'ISR': 'il',
+                'ITA': 'it', 'KAZ': 'kz', 'KOS': 'xk', 'LVA': 'lv', 'LIE': 'li',
+                'LTU': 'lt', 'LUX': 'lu', 'MLT': 'mt', 'MDA': 'md', 'MKD': 'mk',
+                'MNE': 'me', 'NED': 'nl', 'NIR': 'gb-nir', 'NOR': 'no', 'POL': 'pl',
+                'POR': 'pt', 'IRL': 'ie', 'ROU': 'ro', 'RUS': 'ru', 'SMR': 'sm',
+                'SCO': 'gb-sct', 'SRB': 'rs', 'SVK': 'sk', 'SVN': 'si', 'SWE': 'se',
+                'SUI': 'ch', 'TUR': 'tr', 'UKR': 'ua', 'WAL': 'gb-wls', 'FRO': 'fo',
+                
+                // South America
+                'ARG': 'ar', 'BOL': 'bo', 'BRA': 'br', 'CHL': 'cl', 'COL': 'co',
+                'ECU': 'ec', 'PAR': 'py', 'PER': 'pe', 'URY': 'uy', 'VEN': 've', 'SUR': 'sr',
+                
+                // North/Central America
+                'USA': 'us', 'CAN': 'ca', 'MEX': 'mx', 'CRC': 'cr', 'PAN': 'pa',
+                'JAM': 'jm', 'HAI': 'ht', 'HON': 'hn', 'SLV': 'sv', 'TRI': 'tt',
+                'GUY': 'gy', 'CUW': 'cw', 'GRN': 'gd', 'NCA': 'ni', 'DMA': 'dm', 'GTM': 'gt', 'MSR': 'ms', 'CYM': 'ky', 'DOM': 'do', 'SKN': 'kn', 'PUR': 'pr', 'ATG': 'ag', 'CUB': 'cu', 'LCA': 'lc', 'BER': 'bm', 'VIN': 'vc', 'BRB': 'bb', 'BLZ': 'bz', 'COK': 'ck', 'ARU': 'aw', 'VIR': 'vi', 'TCA': 'tc', 'BAH': 'bs', 'VGB': 'vg', 'AIA': 'ai',
+                
+                // Africa
+                'ALG': 'dz', 'ANG': 'ao', 'BEN': 'bj', 'BFA': 'bf', 'BDI': 'bi', 'MWI': 'mw',
+                'CMR': 'cm', 'CPV': 'cv', 'CTA': 'cf', 'TCH': 'td', 'COM': 'km',
+                'CGO': 'cg', 'COD': 'cd', 'CIV': 'ci', 'DJI': 'dj', 'EGY': 'eg',
+                'EQG': 'gq', 'ERI': 'er', 'ETH': 'et', 'GAB': 'ga', 'GAM': 'gm',
+                'GHA': 'gh', 'GUI': 'gn', 'GNB': 'gw', 'KEN': 'ke', 'LES': 'ls',
+                'LBR': 'lr', 'LBY': 'ly', 'MAD': 'mg', 'MLI': 'ml', 'MTN': 'mr',
+                'MRI': 'mu', 'MAR': 'ma', 'MOZ': 'mz', 'NAM': 'na', 'NIG': 'ne',
+                'NGA': 'ng', 'RWA': 'rw', 'STP': 'st', 'SEN': 'sn', 'SEY': 'sc',
+                'SLE': 'sl', 'SOM': 'so', 'RSA': 'za', 'SSD': 'ss', 'SUD': 'sd',
+                'SWZ': 'sz', 'TAN': 'tz', 'TOG': 'tg', 'TUN': 'tn', 'UGA': 'ug',
+                'ZAM': 'zm', 'ZIM': 'zw', 'BWA': 'bw',
+                
+                // Asia
+                'AFG': 'af', 'AUS': 'au', 'BHR': 'bh', 'BAN': 'bd', 'BHU': 'bt',
+                'BRU': 'bn', 'CAM': 'kh', 'CHN': 'cn', 'TPE': 'tw', 'HKG': 'hk',
+                'IND': 'in', 'IDN': 'id', 'IRN': 'ir', 'IRQ': 'iq', 'JPN': 'jp',
+                'JOR': 'jo', 'KAZ': 'kz', 'PRK': 'kp', 'KOR': 'kr', 'KUW': 'kw',
+                'KGZ': 'kg', 'LAO': 'la', 'LBN': 'lb', 'MAC': 'mo', 'MAY': 'my',
+                'MDV': 'mv', 'MGL': 'mn', 'MYA': 'mm', 'NEP': 'np', 'OMA': 'om',
+                'PAK': 'pk', 'PLE': 'ps', 'PHI': 'ph', 'QAT': 'qa', 'KSA': 'sa',
+                'SIN': 'sg', 'SRI': 'lk', 'SYR': 'sy', 'TJK': 'tj', 'THA': 'th',
+                'TLS': 'tl', 'TKM': 'tm', 'UAE': 'ae', 'UZB': 'uz', 'VIE': 'vn',
+                'YEM': 'ye',
+                
+                // Oceania
+                'ASA': 'as', 'FIJ': 'fj', 'NCL': 'nc', 'NZL': 'nz', 'SOL': 'sb',
+                'TAH': 'pf', 'TGA': 'to', 'VAN': 'vu', 'SAM': 'ws', 'PNG': 'pg', 'GUM': 'gu',
+            };
+            
+            return flagMap[countryCode] || countryCode.toLowerCase();
+        }
+
+        // RANK CHANGE ICON FUNCTION FOR RK COLUMN
+        function getRankChangeIcon(changeType, changeValue) {
+            if (!changeType || changeType === "same" || changeValue === 0) {
+                return `<span class="rank-change-icon rank-change-same">●</span>`;
+            }
+            
+            if (changeType === "up") {
+                return `<span class="rank-change-icon rank-change-up">↑</span>`;
+            }
+            
+            if (changeType === "down") {
+                return `<span class="rank-change-icon rank-change-down">↓</span>`;
+            }
+            
+            return `<span class="rank-change-icon rank-change-same">–</span>`;
+        }
+
+        // FUNCTION TO FORMAT POINTS CHANGE WITH COLOR
+        function formatPointsChange(pointsChange) {
+            if (pointsChange === 0 || pointsChange === null || pointsChange === undefined) {
+                return '';
+            }
+            
+            // Determine if positive or negative
+            const isPositive = pointsChange > 0;
+            const formattedChange = Math.abs(pointsChange).toFixed(2);
+            
+            // Determine CSS class based on sign
+            const cssClass = isPositive ? 'points-change-positive' : 'points-change-negative';
+            
+            // Return formatted HTML with appropriate color
+            return `<span class="points-change ${cssClass}">(${isPositive ? '+' : '-'}${formattedChange})</span>`;
+        }
+
+        // Function to display rankings
+        function displayRankings() {
+            const tableBody = document.getElementById('ranking-body');
+            
+            // Clear any existing rows
+            tableBody.innerHTML = '';
+            
+            // Display each team row
+            currentGlobalRanking.forEach(team => {
+                const row = document.createElement('tr');
+                const displayPoints = team.points ? team.points.toFixed(2) : 'N/A';
+                const pointsChangeHTML = formatPointsChange(team.pointsChange);
+                
+                // Generate team row HTML
+                row.innerHTML = `
+                    <td>
+                        <div class="rank-cell">
+                            ${getRankChangeIcon(team.change, team.changeValue)}
+                            <span class="rank-number">${team.rank}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="team-cell">
+                            <div class="team-flag">
+                                <span class="fi fi-${getFlagClass(team.code)}"></span>
+                            </div>
+                            <div>
+                                <div class="team-name">${team.name}</div>
+                                <div class="team-code">${team.code}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="points-container">
+                            <span class="points-main">${displayPoints}</span>
+                            ${pointsChangeHTML}
+                        </div>
+                    </td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initialize the page
+        function initPage() {
+            // Display ranking
+            displayRankings();
+            
+            // Set current date
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('updateDateDisplay').textContent = 
+                `Last Updated: ${now.toLocaleDateString('en-US', options)} | Scroll Down to find matches that included in the next fifa update`;
+        }
+
+        // Start when page loads
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>
