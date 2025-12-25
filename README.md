@@ -130,4 +130,66 @@ For 2026:
 
 - **Arab Cup: I = 5 (at fifa arab cup 2021 it was I = 15, 25, however in today arab cup its I = 5, but most websites thinks its I = 10, 15, 25)**
 
+## How to EDIT The Code:
+To change the position or ranking of any team, simply delete the line containing it and move it down or up depending on its number of points and the points of the other teams next to it. Example:
+We calculated the points of the Moroccan national team against the Comoros national team in the Africa Cup of Nations and obtained +4.05. This means their points: 1720.39 Morocco is ranked 11th globally, while Croatia is ranked 10th globally, but with a points difference of approximately: 1716.88 This means we will drop the Croatian national team from 10th place to 11th rank here the example:
 
+```html
+            { rank: 9, name: "Germany", code: "GER", points: 1724.15, change: "same", changeValue: 1, pointsChange: 0 },
+            { rank: 10, name: "Morocco", code: "MAR", points: 1720.39, change: "up", changeValue: 1, pointsChange: +4.05 },
+            { rank: 11, name: "Croatia", code: "CRO", points: 1716.88, change: "down", changeValue: 1, pointsChange: 0 },
+```
+Morocco's ranking will be increased because they moved from 11th to 10th place, meaning they improved. Germany will remain in its current position. However, don't forget to include how many points you gained or lost in PointsChange
+
+### The Matches:
+Now, to add a match to the code, I will explain how, For example, we have the match between Morocco and Comoros, and we calculated the equation and everything, But we would like to add information such as how many points Morocco gained, how many points Comoros lost, the type of tournament, who won it, and so on...:
+
+- Here we have the match history (time)
+
+```html
+<div class="date-title">21 December 2025</div>
+```
+
+- Now you should put this under the match date, like this: 
+
+```html
+<div class="date-title">21 December 2025</div>
+<div class="matches-list"> <!-- this one -->
+```
+
+Now, how do we add the teams that will face each other? We'll explain everything to you now:
+```html
+                <div class="date-title">21 December 2025</div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+4.05</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ma"></span>
+                            </div>
+                            <div class="team-name-large">Morocco</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">2 - 0</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="ended-match">Ended with Morocco Victory</div>
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change negative">-4.05</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-km"></span>
+                            </div>
+                            <div class="team-name-large">Comoros</div>
+                        </div>
+            </div>
+```
+Now, this is the full code for the game called fi-fi-ma. "Ma" is the flag of Morocco. To find the flags of other countries, go below and you will find the names of the countries (three letters each) along with a definition of the continents. 
+
+I hope you understand how the website works. I put a lot of effort into writing the schedule and setting up the site, calculating every single match without forgetting anything. I might be late in calculating one or two matches, which is normal because I have other circumstances
+
+### About Me:
+- Zakaria: 23YO
+- Made with ❤
+- You can contribute by accurately calculating the national team's points. 
