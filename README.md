@@ -63,3 +63,31 @@ Lose In Penalties: 0.5
 ```
 Lose: 0
 ```
+
+- **WE: Expected result:**
+To calculate it, we need to do the following: 
+We have an example:
+A = 1720.32
+B = 1516.18
+
+1720.32 - 1516.18 = 204.14
+204.14 ÷ 600 = 0.3402333333
+10^(-0.4568426759) = 0.4568426759
+1 + 0.4568426759 = 1.4568426759
+1 ÷ 1.4568426759 = 0.6864159161
+
+Now we have a number with many digits, but we will take three digits after the decimal point, which are: 
+**0.686**
+Now, if we find the last number to be 5 or higher, we will increase the points. I mean 5, 6, 7, 8, 9, so we will increase the points like this: 
+Before:
+**0.68**
+
+Now: 
+**0.69**
+
+Also, the WE we obtained will be taken by the team with the most points, and since we had Team A, they will take the WE we calculated
+
+And now we will calculate:
+1720.32 + 10 x (1 - 0.69) = 1723.42
+
+However, there is another method for calculating points that is 100% accurate, and we use it on our website. The method I gave you is not 100% accurate; even if, for example, we calculated it and found 1723.42, FIFA will either decrease or increase it, making it 1723.45. 
