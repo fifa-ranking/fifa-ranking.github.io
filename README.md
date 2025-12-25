@@ -9,8 +9,20 @@ P = PBefore + I x (W - WE)
 
 - **P = Points after calculation**
 - **PBefore: Points before calculation**
+
 - **I = Match type:**
- - Friendly matches played outside of International Match Calendar windows : 5
+```
+Friendly matches played outside of International Match Calendar windows : 5
+```
+
+```
  - Friendly matches played during International Match Calendar windows: 10
+```
+
+```
  - Group phase matches of Nations League competitions: 15
+```
+
+```
  - Play-off and final matches of Nations League competitions: 25
+```
