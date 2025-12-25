@@ -109,7 +109,7 @@ However, there is another method for calculating points that is 100% accurate, a
 
 - **UEFA Nations League, CONCACAF NATIONS LEAGUE: I = 15, 25**
 
-- **Friendly Matches At these times:**
+- **Friendly Matches At these times:** I = 10
 ```
 For 2026:
 
@@ -125,6 +125,7 @@ For 2026:
 
 9 November 2026 ------> 17 November 2026 (2 Max Number of Matches Per Team)
 ```
+This times means it's during the FIFA International Match Calendar period
 
 - **Friendly Matches Outside the times above: I = 5**
 
