@@ -40,7 +40,7 @@ FIFA World Cup final competition matches up until QF stage: I = 50
 ```
 
 ```
-FIFA World Cup final competition matches from QF stage onwards: I = 68
+FIFA World Cup final competition matches from QF stage onwards: I = 60
 ```
 
 - **W**: Match result:
@@ -101,3 +101,28 @@ And now we will calculate:
 1720.32 + 10 x (1 - 0.69) = 1723.42
 
 However, there is another method for calculating points that is 100% accurate, and we use it on our website. The method I gave you is not 100% accurate; even if, for example, we calculated it and found 1723.42, FIFA will either decrease or increase it, making it 1723.45. 
+
+## What is the I that tournaments use?!:
+- **World Cup: I = 50, 60**
+
+- **AFCON, UEFA, CONMEBOL, CONCACAF, AFC, OFC CUPS: I = 35, 40**
+
+- **UEFA Nations League, CONCACAF NATIONS LEAGUE: I = 15, 25
+
+- **Friendly Matches At these times:**
+```
+For 2026:
+
+21 December 2025 ------> 18 January 2026 (AFCON CUP)
+
+23 March 2026 ------> 31 March 2026 (2 Max Number of Matches Per Team)
+
+1 June 2026 ------> 9 June 2026 (2 Max Number of Matches Per Team)
+
+11 June 2026 ------> 19 July 2026 (FIFA WORLD CUP)
+
+21 September 2026 ------> 6 October 2026 (4 Max Number of Matches Per Team)
+
+9 November 2026 ------> 17 November 2026 (2 Max Number of Matches Per Team)
+```
+
