@@ -107,7 +107,7 @@ However, there is another method for calculating points that is 100% accurate, a
 
 - **AFCON, UEFA, CONMEBOL, CONCACAF, AFC, OFC CUPS: I = 35, 40**
 
-- **UEFA Nations League, CONCACAF NATIONS LEAGUE: I = 15, 25
+- **UEFA Nations League, CONCACAF NATIONS LEAGUE: I = 15, 25**
 
 - **Friendly Matches At these times:**
 ```
