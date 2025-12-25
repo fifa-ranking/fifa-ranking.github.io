@@ -9,20 +9,57 @@ P = PBefore + I x (W - WE)
 
 - **P = Points after calculation**
 - **PBefore: Points before calculation**
-
 - **I = Match type:**
 ```
-Friendly matches played outside of International Match Calendar windows : 5
+Friendly matches played outside of International Match Calendar windows : I = 5
 ```
 
 ```
- - Friendly matches played during International Match Calendar windows: 10
+Friendly matches played during International Match Calendar windows: I = 10
 ```
 
 ```
- - Group phase matches of Nations League competitions: 15
+Group phase matches of Nations League competitions: I = 15
 ```
 
 ```
- - Play-off and final matches of Nations League competitions: 25
+Play-off and final matches of Nations League competitions: I = 25
+```
+
+```
+Confederation final competition matches up until the QF stage: I = 35
+```
+
+```
+Confederation final competition matches from the QF stage onwards; all FIFA Confede-
+rations Cup matches: I = 40
+```
+
+```
+FIFA World Cup final competition matches up until QF stage: I = 50
+```
+
+```
+FIFA World Cup final competition matches from QF stage onwards: I = 68
+```
+
+- **W**: Match result:
+```
+Win = 1
+```
+
+```
+Draw = 0.5
+```
+
+```
+WIN In Penalties: 0.75
+```
+
+```
+Lose In Penalties: 0.5
+```
+
+```
+Lose: 0
 ```
