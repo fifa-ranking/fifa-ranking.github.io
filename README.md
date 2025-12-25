@@ -1,4 +1,4 @@
-# FIFA Ranking:
+# FIFA Ranking
 > [!WARNING]
 > We are not the official FIFA ranking website and are not affiliated with them in any way. We are simply a website that calculates and predicts the points of national teams in the FIFA world rankings for upcoming updates before they are released on the official FIFA website
 
@@ -125,4 +125,9 @@ For 2026:
 
 9 November 2026 ------> 17 November 2026 (2 Max Number of Matches Per Team)
 ```
+
+- **Friendly Matches Outside the times above: I = 5**
+
+- **Arab Cup: I = 5 (at fifa arab cup 2021 it was I = 15, 25, however in today arab cup its I = 5, but most websites thinks its I = 10, 15, 25)**
+
 
