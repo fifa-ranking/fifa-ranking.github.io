@@ -24,6 +24,173 @@
             flex-direction: column;
             gap: 30px;
         }
+        
+        /* NEW HORIZONTAL HIGHLIGHTS SECTION */
+        .highlights-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .highlights-header {
+            background: linear-gradient(135deg, #0055a4 0%, #003580 100%);
+            color: white;
+            padding: 25px 30px;
+            border-bottom: 4px solid #ff0000;
+        }
+        .highlights-header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .highlights-header h2 {
+            font-size: 20px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        .highlights-scroll-wrapper {
+            position: relative;
+            padding: 0 10px;
+        }
+        .highlights-horizontal-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            gap: 20px;
+            padding: 30px 20px;
+            scrollbar-width: thin;
+            scrollbar-color: #0055a4 #f0f0f0;
+        }
+        .highlights-horizontal-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        .highlights-horizontal-scroll::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 4px;
+        }
+        .highlights-horizontal-scroll::-webkit-scrollbar-thumb {
+            background: #0055a4;
+            border-radius: 4px;
+        }
+        .highlight-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s, box-shadow 0.3s;
+            min-width: 220px;
+            flex-shrink: 0;
+        }
+        .highlight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #0055a4;
+        }
+        .highlight-flag {
+            width: 90px;
+            height: 60px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            border: 2px solid #fff;
+            margin-bottom: 20px;
+            background: white;
+        }
+        .highlight-flag .fi {
+            width: 100%;
+            height: 100%;
+            border-radius: 4px;
+        }
+        .highlight-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #0055a4;
+            margin-bottom: 12px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .highlight-detail {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 8px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            min-width: 120px;
+            display: inline-block;
+        }
+        .highlight-detail.rank {
+            background: linear-gradient(135deg, #0055a4 0%, #003580 100%);
+            color: white;
+        }
+        .highlight-detail.up {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+        }
+        .highlight-detail.down {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        .highlight-detail.points-positive {
+            background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+            color: white;
+        }
+        .highlight-detail.points-negative {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+        }
+        .highlight-change-icon {
+            font-size: 20px;
+            display: inline-block;
+            margin-right: 8px;
+            vertical-align: middle;
+            font-weight: bold;
+        }
+        .scroll-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 85, 164, 0.9);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .scroll-arrow:hover {
+            background: #003580;
+            transform: translateY(-50%) scale(1.1);
+        }
+        .scroll-arrow-left {
+            left: 10px;
+        }
+        .scroll-arrow-right {
+            right: 10px;
+        }
+        .scroll-arrow.hidden {
+            display: none;
+        }
+        .highlights-instruction {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+            font-style: italic;
+            padding-bottom: 10px;
+        }
+        
         .fifa-container, .matches-container {
             background: white;
             border-radius: 8px;
@@ -326,9 +493,30 @@
         /* Responsive */
         @media (max-width: 768px) {
             body { padding: 10px; }
-            .ranking-header, .matches-header { padding: 20px; }
-            .ranking-header h1, .matches-header h1 { font-size: 22px; }
-            .ranking-header h2, .matches-header h2 { font-size: 16px; }
+            .highlights-header, .ranking-header, .matches-header { padding: 20px; }
+            .highlights-header h1, .ranking-header h1, .matches-header h1 { font-size: 22px; }
+            .highlights-header h2, .ranking-header h2, .matches-header h2 { font-size: 16px; }
+            .highlight-card {
+                min-width: 200px;
+                padding: 20px;
+            }
+            .highlight-flag {
+                width: 80px;
+                height: 54px;
+            }
+            .highlight-name {
+                font-size: 16px;
+                min-height: 45px;
+            }
+            .highlight-detail {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+            .scroll-arrow {
+                width: 35px;
+                height: 35px;
+                display: none; /* Hide arrows on mobile */
+            }
             .info-bar {
                 flex-direction: column;
                 gap: 10px;
@@ -365,11 +553,114 @@
                 order: 2;
             }
         }
+        
+        @media (max-width: 480px) {
+            .highlight-card {
+                min-width: 180px;
+                padding: 15px;
+            }
+            .highlight-name {
+                font-size: 15px;
+                min-height: 40px;
+            }
+            .highlights-instruction {
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <!-- FIFA Ranking Section -->
+        <!-- NEW HORIZONTAL HIGHLIGHTS SECTION - ADD YOUR TEAMS HERE -->
+        <div class="highlights-container">
+            <div class="highlights-header">
+                <h1>TEAM HIGHLIGHTS</h1>
+                <h2>Ranking Information</h2>
+            </div>
+            
+            <div class="highlights-scroll-wrapper">
+                <button class="scroll-arrow scroll-arrow-left" id="scrollLeft">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                    </svg>
+                </button>
+                
+                <div class="highlights-horizontal-scroll" id="highlightsScroll">
+                    <!-- =============================================== -->
+                    <!-- ADD YOUR TEAM CARDS HERE - EDIT AS YOU WANT -->
+                    <!-- =============================================== -->
+                    
+                    <!-- مثال 1: فريق مع مرتبة -->
+                    <div class="highlight-card">
+                        <div class="highlight-flag">
+                            <span class="fi fi-es"></span>
+                        </div>
+                        <div class="highlight-name">SPAIN</div>
+                        <div class="highlight-detail rank">1st</div>
+                    </div>
+                    
+                    <!-- مثال 2: فريق مع أيقونة صعود -->
+                    <div class="highlight-card">
+                        <div class="highlight-flag">
+                            <span class="fi fi-ng"></span>
+                        </div>
+                        <div class="highlight-name">NIGERIA</div>
+                        <div class="highlight-detail up">↑ +4</div>
+                    </div>
+                    <div class="highlight-card">
+                        <div class="highlight-flag">
+                            <span class="fi fi-cd"></span>
+                        </div>
+                        <div class="highlight-name">DR CONGO</div>
+                        <div class="highlight-detail up">↑ +4</div>
+                    </div>                 
+                    <!-- مثال 3: فريق مع أيقونة نزول -->
+                    <div class="highlight-card">
+                        <div class="highlight-flag">
+                            <span class="fi fi-gq"></span>
+                        </div>
+                        <div class="highlight-name">EQUATORIAL GUINEA</div>
+                        <div class="highlight-detail down">↓ -5</div>
+                    </div>
+                    
+                    <!-- مثال 4: فريق مع نقاط إيجابية -->
+                    <div class="highlight-card">
+                        <div class="highlight-flag">
+                            <span class="fi fi-cm"></span>
+                        </div>
+                        <div class="highlight-name">CAMEROON</div>
+                        <div class="highlight-detail points-positive">+13.56</div>
+                    </div>
+                    
+                    <!-- مثال 5: فريق مع نقاط سلبية -->
+                    <div class="highlight-card">
+                        <div class="highlight-flag">
+                            <span class="fi fi-ga"></span>
+                        </div>
+                        <div class="highlight-name">GABON</div>
+                        <div class="highlight-detail points-negative">-13.56</div>
+                    </div>
+                </div>
+                
+                <button class="scroll-arrow scroll-arrow-right" id="scrollRight">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="highlights-instruction">
+                ← Scroll horizontally to see more teams →
+            </div>
+            
+            <div class="info-bar">
+                <div class="update-date">
+                    Highlights based on FIFA Ranking (Jan 2026) | Points changes from recent matches
+                </div>
+            </div>
+        </div>
+        
+        <!-- FIFA Ranking Section - ALL 210 TEAMS ARE HERE -->
         <div class="fifa-container">
             <div class="ranking-header">
                 <h1>FIFA / COCA-COLA WORLD RANKING </h1>
@@ -391,7 +682,7 @@
                     </tr>
                 </thead>
                 <tbody id="ranking-body">
-                    <!-- Ranking data will be loaded here -->
+                    <!-- Ranking data will be loaded here - ALL 210 TEAMS -->
                 </tbody>
             </table>
             
@@ -400,13 +691,61 @@
             </div>
         </div>
         
-        <!-- Matches Section -->
+        <!-- Matches Section - ALL MATCHES ARE HERE -->
         <div class="matches-container">
             <div class="matches-header">
                 <h1>Upcoming & Recent Matches</h1>
                 <h2>International Football Fixtures</h2>
             </div>
             <div class="matches-date-section">
+                <div class="date-title">26 December 2025</div>
+                <div class="matches-list">
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+0</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-eg"></span>
+                            </div>
+                            <div class="team-name-large">Egypt</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">0 - 0</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="soon-match">Coming Soon...</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change positive">+0</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-za"></span>
+                            </div>
+                            <div class="team-name-large">South Africa</div>
+                        </div>
+                        </div>
+                    <div class="match-card">
+                        <div class="team-section">
+                            <div class="team-change positive">+0</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-zw"></span>
+                            </div>
+                            <div class="team-name-large">Zimbabwe</div>
+                        </div>
+                        
+                        <div class="match-center">
+                            <div class="match-score">0 - 0</div>
+                            <div class="match-type">Africa Cup of Nations | Group Stage</div>
+                            <div class="soon-match">Coming Soon...</div>              
+                        </div>
+                        
+                        <div class="team-section">
+                            <div class="team-change positive">+0</div>
+                            <div class="team-flag-large">
+                                <span class="fi fi-ao"></span>
+                            </div>
+                            <div class="team-name-large">Angola</div>
+                        </div>
+                        </div>
                 <div class="date-title">25 December 2025</div>
                     <div class="match-card">
                       
@@ -711,7 +1050,7 @@
     </div>
 
     <script>
-        // FIFA WORLD RANKING DATA مع بيانات نقاط التغيير المضافة
+        // FIFA WORLD RANKING DATA - ALL 210 TEAMS
         const currentGlobalRanking = [
             { rank: 1, name: "Spain", code: "ESP", points: 1877.18, change: "same", changeValue: 0, pointsChange: 0 },
             { rank: 2, name: "Argentina", code: "ARG", points: 1873.33, change: "same", changeValue: 0, pointsChange: 0 },
@@ -1061,10 +1400,72 @@
             });
         }
 
+        // Initialize scroll arrows for horizontal highlights
+        function initScrollArrows() {
+            const scrollContainer = document.getElementById('highlightsScroll');
+            const scrollLeftBtn = document.getElementById('scrollLeft');
+            const scrollRightBtn = document.getElementById('scrollRight');
+            
+            // Hide arrows if content doesn't overflow
+            function updateArrowVisibility() {
+                const isOverflowing = scrollContainer.scrollWidth > scrollContainer.clientWidth;
+                
+                if (!isOverflowing) {
+                    scrollLeftBtn.classList.add('hidden');
+                    scrollRightBtn.classList.add('hidden');
+                } else {
+                    scrollLeftBtn.classList.remove('hidden');
+                    scrollRightBtn.classList.remove('hidden');
+                    
+                    // Update left arrow visibility
+                    if (scrollContainer.scrollLeft <= 10) {
+                        scrollLeftBtn.classList.add('hidden');
+                    } else {
+                        scrollLeftBtn.classList.remove('hidden');
+                    }
+                    
+                    // Update right arrow visibility
+                    if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 10) {
+                        scrollRightBtn.classList.add('hidden');
+                    } else {
+                        scrollRightBtn.classList.remove('hidden');
+                    }
+                }
+            }
+            
+            // Scroll left
+            scrollLeftBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: -300,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Scroll right
+            scrollRightBtn.addEventListener('click', () => {
+                scrollContainer.scrollBy({
+                    left: 300,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Update arrow visibility on scroll
+            scrollContainer.addEventListener('scroll', updateArrowVisibility);
+            
+            // Update arrow visibility on resize
+            window.addEventListener('resize', updateArrowVisibility);
+            
+            // Initial update
+            updateArrowVisibility();
+        }
+
         // Initialize the page
         function initPage() {
             // Display ranking
             displayRankings();
+            
+            // Initialize scroll arrows for horizontal highlights
+            initScrollArrows();
             
             // Set current date
             const now = new Date();
