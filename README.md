@@ -71,9 +71,13 @@ A = 1720.32
 B = 1516.18
 
 1720.32 - 1516.18 = 204.14
+
 204.14 ÷ 600 = 0.3402333333
+
 10^(-0.4568426759) = 0.4568426759
+
 1 + 0.4568426759 = 1.4568426759
+
 1 ÷ 1.4568426759 = 0.6864159161
 
 Now we have a number with many digits, but we will take three digits after the decimal point, which are: 
