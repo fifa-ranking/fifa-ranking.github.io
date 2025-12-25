@@ -95,6 +95,7 @@ Now:
 Also, the WE we obtained will be taken by the team with the most points, and since we had Team A, they will take the WE we calculated
 
 And now we will calculate:
+
 1720.32 + 10 x (1 - 0.69) = 1723.42
 
 However, there is another method for calculating points that is 100% accurate, and we use it on our website. The method I gave you is not 100% accurate; even if, for example, we calculated it and found 1723.42, FIFA will either decrease or increase it, making it 1723.45. 
