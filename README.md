@@ -134,10 +134,10 @@ For 2026:
 To change the position or ranking of any team, simply delete the line containing it and move it down or up depending on its number of points and the points of the other teams next to it. Example:
 We calculated the points of the Moroccan national team against the Comoros national team in the Africa Cup of Nations and obtained +4.05. This means their points: 1720.39 Morocco is ranked 11th globally, while Croatia is ranked 10th globally, but with a points difference of approximately: 1716.88 This means we will drop the Croatian national team from 10th place to 11th rank here the example:
 
-```html
-            { rank: 9, name: "Germany", code: "GER", points: 1724.15, change: "same", changeValue: 1, pointsChange: 0 },
-            { rank: 10, name: "Morocco", code: "MAR", points: 1720.39, change: "up", changeValue: 1, pointsChange: +4.05 },
-            { rank: 11, name: "Croatia", code: "CRO", points: 1716.88, change: "down", changeValue: 1, pointsChange: 0 },
+```js
+{ rank: 9, name: "Germany", code: "GER", points: 1724.15, change: "same", changeValue: 1, pointsChange: 0 },
+{ rank: 10, name: "Morocco", code: "MAR", points: 1720.39, change: "up", changeValue: 1, pointsChange: +4.05 },
+{ rank: 11, name: "Croatia", code: "CRO", points: 1716.88, change: "down", changeValue: 1, pointsChange: 0 },
 ```
 Morocco's ranking will be increased because they moved from 11th to 10th place, meaning they improved. Germany will remain in its current position. However, don't forget to include how many points you gained or lost in PointsChange
 
