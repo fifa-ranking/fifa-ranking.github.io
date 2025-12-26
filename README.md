@@ -131,6 +131,9 @@ This times means it's during the FIFA International Match Calendar period
 
 - **Arab Cup: I = 5 (at fifa arab cup 2021 it was I = 15, 25, however in today arab cup its I = 5, but most websites thinks its I = 10, 15, 25)**
 
+> [!IMPORTANT]
+> We calculate match points before they start only for preparation purposes, if I have any circumstances
+
 ## How to EDIT The Code:
 To change the position or ranking of any team, simply delete the line containing it and move it down or up depending on its number of points and the points of the other teams next to it. Example:
 We calculated the points of the Moroccan national team against the Comoros national team in the Africa Cup of Nations and obtained +4.05. This means their points: 1720.39 Morocco is ranked 11th globally, while Croatia is ranked 10th globally, but with a points difference of approximately: 1716.88 This means we will drop the Croatian national team from 10th place to 11th rank here the example:
