@@ -196,4 +196,4 @@ I hope you understand how the website works. I put a lot of effort into writing 
 ### About Me:
 - Zakaria: 23YO
 - Made with ❤
-- You can contribute by accurately calculating the national team's points. 
+- You can contribute by accurately calculating the national team's points and open issue
