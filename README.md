@@ -1,5 +1,5 @@
 # FIFA Ranking
-> [!WARNING]
+> [!INFO]
 > We are not the official FIFA ranking website and are not affiliated with them in any way. We are simply a website that calculates and predicts the points of national teams in the FIFA world rankings for upcoming updates before they are released on the official FIFA website
 
 ## How do we calculate:
